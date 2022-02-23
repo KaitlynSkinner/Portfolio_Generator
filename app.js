@@ -1,5 +1,5 @@
-//require statement to allow app.js to access the fs module's functions through the fs assignment
-const fs = require('fs');
+//object destructuring access writeFile and copyFile functions in generate-site.js
+const { writeFile, copyFile } = require('./utils/generate-site.js');
 
 // access inquirer
 const inquirer = require('inquirer');
@@ -135,93 +135,26 @@ const promptProject = portfolioData => {
         });
 };
 
-//Mock Data
-// const mockData = {
-//     {
-//         name: 'kaitlyn',
-//         github: 'kaitlynskinner',
-//         confirmAbout: true,
-//         about: 'I love to code!',
-//         projects: [
-//           {
-//             name: 'Run_Buddy',
-//             description: 'A website that offers fitness training services.',
-//             languages: [Array],
-//             link: 'https://kaitlynskinner.github.io/Run_Buddy/',
-//             feature: false,
-//             confirmAddProject: true
-//           },
-//           {
-//             name: 'Password_Generator',
-//             description: 'An application an employee can use in order to generate a random password based on criteria they have selected.',
-//             languages: [Array],
-//             link: 'https://kaitlynskinner.github.io/Password_Generator/',
-//             feature: false,
-//             confirmAddProject: true
-//           },
-//           {
-//             name: 'Coding_Quiz',
-//             description: 'An timed coding quiz made of multiple choice questions.',
-//             languages: [Array],
-//             link: 'https://kaitlynskinner.github.io/Coding_Quiz/',
-//             feature: false,
-//             confirmAddProject: true
-//           },
-//           {
-//             name: 'Robot_Gladiators',
-//             description: 'A game created to battle numerous robots, view your score, and visit a shop.',
-//             languages: [Array],
-//             link: 'https://kaitlynskinner.github.io/Robot_Gladiators/',
-//             feature: false,
-//             confirmAddProject: true
-//           },
-//           {
-//             name: 'Taskinator',
-//             description: 'A task tracking application',
-//             languages: [Array],
-//             link: 'https://kaitlynskinner.github.io/Taskinator/',
-//             feature: false,
-//             confirmAddProject: true
-//           },
-//           {
-//             name: 'Work_Day_Scheduler',
-//             description: 'A 9-5 work day scheduler with colour-coded time slots and areas users can save events to.',
-//             languages: [Array],
-//             link: 'https://kaitlynskinner.github.io/Work_Day_Scheduler/',
-//             feature: true,
-//             confirmAddProject: true
-//           },
-//           {
-//             name: 'Weather_Dashboard',
-//             description: 'A weather dashboard where travellers can see the weather outlook for multiple cities so they are able to plan a trip accordingly.',
-//             languages: [Array],
-//             link: 'https://kaitlynskinner.github.io/Weather_Dashboard/',
-//             feature: false,
-//             confirmAddProject: true
-//           },
-//           {
-//             name: 'Personal_Portfolio',
-//             description: 'Professional Portfolio.',
-//             languages: [Array],
-//             link: 'https://kaitlynskinner.github.io/Personal_Portfolio/',
-//             feature: false,
-//             confirmAddProject: false
-//           }
-//         ]
-//       }
-// };
-
 // Call the function(s)
 promptUser()
 //.then(answers => console.log(answers))
 .then(promptProject)
 .then(portfolioData => {
+    return generatePage(portfolioData);
 
-    const pageHTML = generatePage(portfolioData);
+    //https://kaitlynskinner.github.io/Run_Buddy/
 
-    fs.writeFile('./index.html', pageHTML, err => {
-        if (err) throw new Error(err);
-
-        console.log('Page created! Check out index.html in this directory to see it!');
-    });
+})
+.then(pageHTML => {
+  return writeFile(pageHTML);
+})
+.then(writeFileResponse => {
+  console.log(writeFileResponse);
+  return copyFile();
+})
+.then(copyFileResponse => {
+  console.log(copyFileResponse);
+})
+.catch(err => {
+  console.log(err);
 });
